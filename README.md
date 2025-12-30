@@ -408,6 +408,82 @@ npm run build
 
 The production build will be in the `frontend/build` directory.
 
+## 🚀 Deployment
+
+### Deploying to Vercel
+
+Both frontend and backend can be deployed to Vercel as separate projects.
+
+#### Frontend Deployment
+
+1. **Import to Vercel**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Add New..." → "Project"
+   - Import your GitHub repository
+   - **Set Root Directory to: `frontend`**
+
+2. **Configure Build Settings**
+   - Framework: Create React App (auto-detected)
+   - Build Command: `npm run build`
+   - Output Directory: `build`
+
+3. **Set Environment Variable**
+   ```
+   REACT_APP_API_URL=https://your-backend-url.vercel.app/api
+   ```
+
+4. **Deploy**
+   - Click "Deploy"
+   - Your frontend will be live at `https://your-project.vercel.app`
+
+📖 **Detailed Guide**: See `frontend/DEPLOYMENT_CHECKLIST.md`
+
+#### Backend Deployment
+
+1. **Prerequisites**
+   - MongoDB Atlas account (recommended for production)
+   - Get your MongoDB connection string
+
+2. **Import to Vercel**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Add New..." → "Project"
+   - Import your GitHub repository
+   - **Set Root Directory to: `backend`**
+
+3. **Configure Build Settings**
+   - Framework: **Other**
+   - Build Command: (leave empty)
+   - Output Directory: (leave empty)
+   - Install Command: `npm install`
+
+4. **Set Environment Variables**
+   ```
+   MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/taskmanager?retryWrites=true&w=majority
+   JWT_SECRET=your_super_secret_jwt_key_at_least_32_characters_long
+   FRONTEND_URL=https://your-frontend.vercel.app
+   NODE_ENV=production
+   ```
+
+5. **Deploy**
+   - Click "Deploy"
+   - Your backend API will be at `https://your-backend.vercel.app/api`
+
+📖 **Detailed Guide**: See `backend/BACKEND_VERCEL_DEPLOYMENT.md` or `backend/DEPLOYMENT_QUICK_START.md`
+
+⚠️ **Important Notes:**
+- Vercel free tier has a 10-second function timeout (60s on Pro)
+- Use MongoDB Atlas (not local MongoDB) for production
+- Set Root Directory correctly for each project
+- Update CORS settings to allow your frontend domain
+
+### Alternative Backend Hosting
+
+For better performance, consider deploying the backend to:
+- **Railway** - Easy Node.js deployment
+- **Render** - Free tier available
+- **Heroku** - Traditional PaaS
+- **DigitalOcean App Platform** - Simple deployment
+
 ## 🐛 Troubleshooting
 
 ### MongoDB Connection Issues
@@ -475,3 +551,5 @@ For issues, questions, or contributions, please open an issue on the repository.
 
 **Happy Task Managing! 🎉**
 
+jainaakash303_db_user
+UIppAh948p1tlr3M

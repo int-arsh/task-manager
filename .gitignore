@@ -1,11 +1,13 @@
 # Dependencies
 node_modules/
 package-lock.json
+yarn.lock
 
 # Environment variables
 .env
 .env.local
 .env.production
+.env.development
 
 # Logs
 logs
@@ -28,4 +30,7 @@ Thumbs.db
 # Build files
 dist/
 build/
+
+# Vercel
+.vercel
 

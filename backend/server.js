@@ -21,8 +21,24 @@ const app = express();
 connectDB();
 
 // Create admin user on first run if no users exist
-mongoose.connection.once('connected', async () => {
+// Optimized for both traditional server and serverless environments
+const createAdminIfNeeded = async () => {
   try {
+    // Wait for connection if not already connected
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('Connection timeout')), 10000);
+        mongoose.connection.once('connected', () => {
+          clearTimeout(timeout);
+          resolve();
+        });
+        mongoose.connection.once('error', (err) => {
+          clearTimeout(timeout);
+          reject(err);
+        });
+      });
+    }
+    
     const userCount = await User.countDocuments();
     if (userCount === 0) {
       const admin = await User.create({
@@ -38,8 +54,12 @@ mongoose.connection.once('connected', async () => {
     }
   } catch (error) {
     console.error('Error creating admin user:', error.message);
+    // Don't throw in serverless - just log
   }
-});
+};
+
+// Run admin creation when connected
+mongoose.connection.once('connected', createAdminIfNeeded);
 
 // Security middleware
 app.use(helmet());
@@ -84,43 +104,46 @@ app.use((req, res) => {
 // Error handler middleware (must be last)
 app.use(errorHandler);
 
-// Server setup
-const PORT = process.env.PORT || 5000;
+// Server setup - only start server if not in serverless environment
+// Vercel will handle the serverless function, so we don't need to listen on a port
+if (process.env.VERCEL !== '1' && !process.env.VERCEL_ENV) {
+  const PORT = process.env.PORT || 5000;
+  
+  const server = app.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  });
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-});
-
-// Graceful shutdown handling
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-    mongoose.connection.close(false, () => {
-      console.log('MongoDB connection closed');
-      process.exit(0);
+  // Graceful shutdown handling (only for non-serverless)
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing HTTP server');
+    server.close(() => {
+      console.log('HTTP server closed');
+      mongoose.connection.close(false, () => {
+        console.log('MongoDB connection closed');
+        process.exit(0);
+      });
     });
   });
-});
 
-process.on('SIGINT', () => {
-  console.log('SIGINT signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-    mongoose.connection.close(false, () => {
-      console.log('MongoDB connection closed');
-      process.exit(0);
+  process.on('SIGINT', () => {
+    console.log('SIGINT signal received: closing HTTP server');
+    server.close(() => {
+      console.log('HTTP server closed');
+      mongoose.connection.close(false, () => {
+        console.log('MongoDB connection closed');
+        process.exit(0);
+      });
     });
   });
-});
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Promise Rejection:', err);
-  server.close(() => {
-    process.exit(1);
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (err) => {
+    console.error('Unhandled Promise Rejection:', err);
+    server.close(() => {
+      process.exit(1);
+    });
   });
-});
+}
 
 module.exports = app;
 

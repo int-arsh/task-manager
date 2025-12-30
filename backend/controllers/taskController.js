@@ -16,15 +16,10 @@ const getTasks = async (req, res, next) => {
     // Build query
     let query = {};
 
-    // If admin and all=true, show all tasks
-    if (req.user.role === 'admin' && all === 'true') {
-      // No filter - show all tasks
-    } else if (req.user.role === 'admin') {
-      // Admin without all=true: show tasks assigned to them OR created by them (so they see tasks they created for others)
-      query.$or = [
-        { assignedTo: req.user._id },
-        { createdBy: req.user._id }
-      ];
+    // Admins see all tasks by default (unless explicitly filtered)
+    if (req.user.role === 'admin') {
+      // Admin sees all tasks - no filter needed
+      // The all=true parameter is kept for backward compatibility but not required
     } else {
       // Normal users: ONLY see tasks assigned to them
       query.assignedTo = req.user._id;
@@ -297,15 +292,9 @@ const getTaskStats = async (req, res, next) => {
     // Build query (same logic as getTasks)
     let query = {};
 
-    // If admin and all=true, show all tasks
-    if (req.user.role === 'admin' && req.query.all === 'true') {
-      // No filter - show all tasks
-    } else if (req.user.role === 'admin') {
-      // Admin without all=true: show tasks assigned to them OR created by them
-      query.$or = [
-        { assignedTo: req.user._id },
-        { createdBy: req.user._id }
-      ];
+    // Admins see all tasks by default
+    if (req.user.role === 'admin') {
+      // Admin sees all tasks - no filter needed
     } else {
       // Normal users: ONLY see tasks assigned to them
       query.assignedTo = req.user._id;
