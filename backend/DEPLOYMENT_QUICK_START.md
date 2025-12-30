@@ -39,6 +39,8 @@ JWT_SECRET=your_super_secret_jwt_key_at_least_32_characters_long
 FRONTEND_URL=https://your-frontend.vercel.app
 ```
 
+⚠️ **Important**: Use only the base URL (no paths like `/login`). Example: `https://task-manager-khaki-eight-17.vercel.app`
+
 ### 5. Deploy
 Click "Deploy" and wait for completion.
 

@@ -69,6 +69,11 @@ JWT_SECRET=your_super_secret_jwt_key_change_this_in_production_min_32_chars
 FRONTEND_URL=https://your-frontend-vercel-url.vercel.app
 ```
 
+**Important**: 
+- Do NOT include any path (like `/login` or `/dashboard`)
+- Use only the base URL: `https://your-frontend.vercel.app`
+- You can add multiple URLs separated by commas: `https://frontend1.vercel.app,https://frontend2.vercel.app`
+
 #### Optional Variables:
 
 ```
