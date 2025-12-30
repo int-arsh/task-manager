@@ -19,9 +19,14 @@ Vercel should auto-detect, but verify:
 Add this environment variable in Vercel:
 
 **Name:** `REACT_APP_API_URL`  
-**Value:** `https://your-backend-url.com/api`
+**Value:** `https://your-backend-url.vercel.app`
 
-Replace `your-backend-url.com` with your actual backend URL.
+**Note:** You can include `/api` or not - the code will automatically append it if missing.
+Examples:
+- `https://task-manager-hcfr.vercel.app` ✅ (will become `/api`)
+- `https://task-manager-hcfr.vercel.app/api` ✅ (already has `/api`)
+
+Replace `your-backend-url.vercel.app` with your actual backend Vercel URL.
 
 ### 4. Deploy
 - Click "Deploy"

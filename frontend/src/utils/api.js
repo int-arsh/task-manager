@@ -2,8 +2,26 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 // Use environment variable in production, fallback to localhost for development
+// Automatically append /api if not present
+const getBaseURL = () => {
+  const envURL = process.env.REACT_APP_API_URL;
+  if (!envURL) {
+    return 'http://localhost:5000/api';
+  }
+  
+  // Remove trailing slash
+  let baseURL = envURL.trim().replace(/\/+$/, '');
+  
+  // Ensure /api is at the end
+  if (!baseURL.endsWith('/api')) {
+    baseURL = `${baseURL}/api`;
+  }
+  
+  return baseURL;
+};
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },
