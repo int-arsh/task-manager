@@ -30,7 +30,7 @@ const Navbar = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
                 <span className="text-white font-bold text-sm">T</span>
               </div>
-              <span className="text-xl font-semibold text-gray-900 hidden sm:block">TaskFlow</span>
+              <span className="text-xl font-semibold text-gray-900 hidden sm:block">Task Manager</span>
             </Link>
             <div className="hidden sm:ml-8 sm:flex sm:space-x-1">
               <Link

@@ -56,7 +56,7 @@ const Login = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900">Welcome back</h2>
             <p className="mt-2 text-sm text-gray-600">
-              Sign in to continue to TaskFlow
+              Sign in to continue to Task Manager
             </p>
           </div>
           <form className="space-y-5" onSubmit={handleSubmit}>
